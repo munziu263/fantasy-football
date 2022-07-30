@@ -43,7 +43,7 @@ function App() {
     <div className="flex flex-wrap bg-slate-900">
       {players &&
         players
-          .filter((player: Player) => player.team === 6)
+          .filter((player: Player) => player.team === 1)
           .map((player: Player) => (
             <PlayerCard
               player={player}

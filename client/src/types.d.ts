@@ -46,7 +46,7 @@ export interface Player {
   id: number;
   in_dreamteam: boolean;
   news: string;
-  news_added: Date | null;
+  news_added: Date | string | null;
   now_cost: number;
   photo: string;
   points_per_game: string;
@@ -54,7 +54,7 @@ export interface Player {
   selected_by_percent: string;
   special: boolean;
   squad_number: null;
-  status: Status;
+  status: Status | string;
   team: number;
   team_code: number;
   total_points: number;
