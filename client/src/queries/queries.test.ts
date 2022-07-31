@@ -9,6 +9,7 @@ import {
   getPositionPlayers,
   bestPlayerBy,
   filteredPlayersBy,
+  cheapestXPlayersForWhom,
 } from "./queries";
 import * as data from "../sample-data.json";
 
@@ -145,9 +146,67 @@ test("filterPlayersBy should return a list of players that match the predicate",
   expect(filteredPlayers.every(predicate)).toBe(true);
 });
 
-test("cheapestPlayerForWhom should return the (best) cheapest player who matches the predicate", () => {
-  // Note to self: now_cost must be the price of the player. Perhaps divided by 5?
-  // GIVEN ,
-  // WHEN ,
-  // THEN .
+test("cheapestXPlayersForWhom should return the (best) cheapest player who matches the predicate", () => {
+  // GIVEN a quantity (x: int), a predicate and a list of players,
+  const quantity: number = 10;
+  const predicate: (player: Player) => boolean = (player) =>
+    player.ict_index_rank < 50;
+  const players: Player[] = data.elements;
+
+  // WHEN I call cheapestPlayerForWhom,
+  const cheapestPlayers: Player[] = cheapestXPlayersForWhom(
+    quantity,
+    predicate,
+    players
+  );
+
+  // THEN I should receive a list with length x of the cheapest players who match that predicate
+  expect(cheapestPlayers).toBeDefined();
+  expect(cheapestPlayers).toHaveLength(quantity);
+  expect(cheapestPlayers.every(predicate)).toBe(true);
+});
+
+test("generateTeam should return a list of players that match the fantasy rules", () => {
+  // GIVEN  a list of players and an optional budget
+  const players: Player[] = data.elements;
+  const budget: number = 100; // the budget per the rules is 100M
+
+  // WHEN   I call generateTeam
+  const generatedTeam: Player[] = generateTeam(players, budget);
+
+  // THEN   I should have a list of players
+  expect(generatedTeam.length).toBeGreaterThan(0);
+  //        with 2 Goalkeepers, 5 defenders, 5 midfielders, and 3 forwards,
+  expect(
+    generatedTeam.filter((player: Player) => player.element_type === 1)
+  ).toHaveLength(2);
+  expect(
+    generatedTeam.filter((player: Player) => player.element_type === 2)
+  ).toHaveLength(5);
+  expect(
+    generatedTeam.filter((player: Player) => player.element_type === 3)
+  ).toHaveLength(5);
+  expect(
+    generatedTeam.filter((player: Player) => player.element_type === 4)
+  ).toHaveLength(3);
+  //        with a total cost less or equal to than the budget
+  expect(
+    generatedTeam.reduce(
+      (sum: number, player: Player) => sum + player.now_cost,
+      0
+    )
+  ).toBeLessThanOrEqual(budget * 10);
+  //        and with no more than 3 players from the same team
+  const teamCounter: { [teamId: number]: number } = generatedTeam
+    .map((player: Player) => player.team)
+    .reduce((count: { [teamId: number]: number }, team: number) => {
+      if (count.hasOwnProperty(team)) {
+        count[team]++;
+      } else {
+        count[team] = 1;
+      }
+      return count;
+    }, {});
+  const counts = Object.values(teamCounter);
+  expect(Math.max(...counts)).toBeLessThanOrEqual(3);
 });

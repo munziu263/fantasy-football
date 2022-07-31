@@ -52,3 +52,18 @@ export const filteredPlayersBy = (
 ) => {
   return players.filter(predicate);
 };
+
+export const cheapestXPlayersForWhom = (
+  quantity: number,
+  predicate: (a: Player) => boolean,
+  players: Player[]
+) => {
+  return players
+    .filter(predicate)
+    .sort((a: Player, b: Player) => a.now_cost - b.now_cost)
+    .slice(0, quantity);
+};
+
+export const generateTeam = (players: Player[], budget: number) => {
+  const BUDGET = budget * 10; // 1M is demonstrated the API as 10.
+};

@@ -38,7 +38,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
     <div
       className={`grid grid-cols-12 
                   rounded-lg container 
-                  m-2 w-52 
+                  m-2 w-52 max-h-[25.5rem]  
                   bg-zinc-400 
                   border hover:border-2 
                   border-slate-700 ${
@@ -79,7 +79,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
         />
       </div>
       {/* Player Details */}
-      <div className="col-span-12 p-2 text-center my-auto">
+      <div className="col-span-12 p-1 text-center my-auto">
         <p className={"text-sm text-zinc-700"}>
           {props.position && props.position.singular_name}
         </p>

@@ -13,6 +13,7 @@ import {
   getPositionPlayers,
   bestPlayerBy,
   filteredPlayersBy,
+  cheapestXPlayersForWhom,
 } from "./queries/queries";
 
 function App() {
@@ -29,9 +30,10 @@ function App() {
         const positions: Position[] = response.data.element_types;
         setTeams(teams);
         setPlayers(
-          filteredPlayersBy(
-            players,
-            (player: Player) => player.influence_rank <= 20
+          cheapestXPlayersForWhom(
+            10,
+            (player: Player) => player.ict_index_rank <= 50,
+            players
           )
         );
         setPositions(positions);
@@ -42,18 +44,20 @@ function App() {
   }, []);
 
   return (
-    <div className="flex flex-wrap bg-slate-900">
-      {players &&
-        players
-          .sort((a: Player, b: Player) => a.ict_index_rank - b.ict_index_rank)
-          .map((player: Player) => (
-            <PlayerCard
-              player={player}
-              position={positions && getPlayerPosition(player, positions)}
-              team={teams && getPlayerTeam(player, teams)}
-              key={"player-" + player.code}
-            />
-          ))}
+    <div className="flex flex-wrap items-start bg-slate-900 bg-fixed min-h-screen top-0 left-0">
+      <div className="flex flex-wrap bg-slate-900">
+        {players &&
+          players
+            // .sort((a: Player, b: Player) => a.ict_index_rank - b.ict_index_rank)
+            .map((player: Player) => (
+              <PlayerCard
+                player={player}
+                position={positions && getPlayerPosition(player, positions)}
+                team={teams && getPlayerTeam(player, teams)}
+                key={"player-" + player.code}
+              />
+            ))}
+      </div>
     </div>
   );
 }
