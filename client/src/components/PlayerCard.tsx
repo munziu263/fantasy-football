@@ -14,10 +14,10 @@ export const PlayerCard = (props: PlayerCardProps) => {
   const teamShirtImageUrlSuffix = "-66.webp";
 
   const positionColor: { [position: number]: string } = {
-    1: "from-slate-600 to-slate-900",
-    2: "from-emerald-800 to-slate-900",
-    3: "from-cyan-800 to-slate-900",
-    4: "from-blue-800 to-slate-900",
+    1: "from-slate-600 via-slate-800 to-slate-900",
+    2: "from-emerald-800 via-slate-800 to-slate-900",
+    3: "from-cyan-800 via-slate-800 to-slate-900",
+    4: "from-blue-900 via-slate-800 to-slate-900",
   };
 
   const borderHoverColor: { [position: number]: string } = {
@@ -47,13 +47,14 @@ export const PlayerCard = (props: PlayerCardProps) => {
                   hover:shadow-md ${
                     shadowHoverColor[props.player.element_type]
                   } hover:shadow-blue-900 
-                  overflow-hidden static`}
+                  overflow-hidden static
+                  hover:scale-95 hover:transition hover:duration-300`}
       key={props.player.code}
     >
       {/* Player Image */}
       <div
         className={`relative col-span-12 
-                    bg-gradient-to-br ${
+                    bg-gradient-to-t ${
                       positionColor[props.player.element_type]
                     }`}
       >
@@ -85,6 +86,25 @@ export const PlayerCard = (props: PlayerCardProps) => {
         <p className="text-xl text-zinc-900 font-bold">
           {props.player.web_name}
         </p>
+      </div>
+      <div className="text-sm text-zinc-50 font-extrabold col-span-12 bg-slate-900 py-2 text-center">
+        RANKED
+      </div>
+      <div className="text-xs text-center col-span-3 py-1 bg-slate-300">
+        <p>INF</p>
+        <p className="text-lg font-bold">{props.player.influence_rank}</p>
+      </div>
+      <div className="text-xs text-center col-span-3 py-1 bg-slate-400">
+        <p>CRE</p>
+        <p className="text-lg font-bold">{props.player.creativity_rank}</p>
+      </div>
+      <div className="text-xs text-center col-span-3 py-1 bg-slate-500">
+        <p>THR</p>
+        <p className="text-lg font-bold">{props.player.threat_rank}</p>
+      </div>
+      <div className="text-xs text-center text-zinc-50 col-span-3 p-1 bg-slate-900">
+        <p>ICT</p>
+        <p className="text-lg font-bold">{props.player.ict_index_rank}</p>
       </div>
     </div>
   );

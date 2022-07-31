@@ -29,7 +29,10 @@ function App() {
         const positions: Position[] = response.data.element_types;
         setTeams(teams);
         setPlayers(
-          filteredPlayersBy(players, (player: Player) => player.team === 1)
+          filteredPlayersBy(
+            players,
+            (player: Player) => player.influence_rank <= 20
+          )
         );
         setPositions(positions);
       })
@@ -42,12 +45,13 @@ function App() {
     <div className="flex flex-wrap bg-slate-900">
       {players &&
         players
-          .sort((a: Player, b: Player) => a.element_type - b.element_type)
+          .sort((a: Player, b: Player) => a.ict_index_rank - b.ict_index_rank)
           .map((player: Player) => (
             <PlayerCard
               player={player}
               position={positions && getPlayerPosition(player, positions)}
               team={teams && getPlayerTeam(player, teams)}
+              key={"player-" + player.code}
             />
           ))}
     </div>
