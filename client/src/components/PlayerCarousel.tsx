@@ -11,9 +11,6 @@ interface PlayerCarouselProps {
 
 export const PlayerCarousel = (props: PlayerCarouselProps) => {
   const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
-  const [unselectedPlayers, setUnselectedPlayers] = useState<Player[]>(
-    props.players
-  );
 
   const POSITION_LIMIT: { [positionId: number]: number } = {
     1: 2,
@@ -36,7 +33,8 @@ export const PlayerCarousel = (props: PlayerCarouselProps) => {
     event.preventDefault();
     if (
       props.position &&
-      selectedPlayers.length < POSITION_LIMIT[props.position.id]
+      selectedPlayers.length < POSITION_LIMIT[props.position.id] &&
+      !selectedPlayers.includes(player)
     ) {
       setSelectedPlayers((prevState: Player[]) => [...prevState, player]);
     } else {
@@ -44,8 +42,6 @@ export const PlayerCarousel = (props: PlayerCarouselProps) => {
         `You have already selected the limit for ${props.position?.plural_name}`
       );
     }
-
-    setUnselectedPlayers((prevState: Player[]) => [...prevState, player]);
   };
 
   const handlePlayerDeselect = (
@@ -53,8 +49,11 @@ export const PlayerCarousel = (props: PlayerCarouselProps) => {
     player: Player
   ) => {
     event.preventDefault();
-    setUnselectedPlayers((prevState: Player[]) => [...prevState, player]);
-    setSelectedPlayers((prevState: Player[]) => [...prevState, player]);
+    setSelectedPlayers((prevState: Player[]) =>
+      prevState.filter(
+        (currentPlayer: Player) => currentPlayer.id !== player.id
+      )
+    );
   };
 
   return (
@@ -82,25 +81,28 @@ export const PlayerCarousel = (props: PlayerCarouselProps) => {
                 player={player}
                 position={props.position}
                 team={getPlayerTeam(player, props.teams)}
+                isSelected={true}
                 key={"player-" + player.code}
                 handlePlayerSelect={handlePlayerSelect}
                 handlePlayerDeselect={handlePlayerDeselect}
               />
             ))}
-        {props.position &&
+        {/* {props.position &&
           [...Array(POSITION_LIMIT[props.position.id])].map((element) => (
-            <div className="mx-2 shrink-0 bg-zinc-50/30 rounded-lg w-52 h-[25.5rem]"></div>
-          ))}
+            <div className="mx-2 shrink-0 bg-zinc-50/30 rounded-lg "></div>
+          ))} */}
       </div>
       <div className="flex col-span-7 p-2 overflow-x-auto overscroll-contain">
-        {unselectedPlayers &&
+        {props.players &&
           props.players
+            .filter((player: Player) => !selectedPlayers.includes(player))
             .sort((a: Player, b: Player) => a.ict_index_rank - b.ict_index_rank)
             .map((player: Player) => (
               <PlayerCard
                 player={player}
                 position={props.position}
                 team={getPlayerTeam(player, props.teams)}
+                isSelected={false}
                 key={"player-" + player.code}
                 handlePlayerSelect={handlePlayerSelect}
                 handlePlayerDeselect={handlePlayerDeselect}

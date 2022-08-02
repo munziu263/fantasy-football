@@ -5,6 +5,7 @@ interface PlayerCardProps {
   player: Player;
   position?: Position;
   team?: Team;
+  isSelected: boolean;
   handlePlayerSelect: (
     event: MouseEvent<HTMLDivElement>,
     player: Player
@@ -16,8 +17,6 @@ interface PlayerCardProps {
 }
 
 export const PlayerCard = (props: PlayerCardProps) => {
-  const [isSelected, setIsSelected] = useState<boolean>(false);
-
   const imageUrlBase =
     "https://resources.premierleague.com/premierleague/photos/players/110x140/p";
   const teamShirtImageUrlBase =
@@ -54,11 +53,9 @@ export const PlayerCard = (props: PlayerCardProps) => {
 
   const handleClick = (event: MouseEvent<HTMLDivElement>, player: Player) => {
     event.preventDefault();
-    setIsSelected(!isSelected);
-    isSelected
+    props.isSelected
       ? props.handlePlayerDeselect(event, player)
       : props.handlePlayerSelect(event, player);
-    console.log(isSelected);
   };
 
   return (
@@ -67,17 +64,12 @@ export const PlayerCard = (props: PlayerCardProps) => {
                   rounded-lg container
                   m-2 w-52 max-h-[25.5rem]  
                   bg-zinc-400 shrink-0
-                  ${isSelected ? "border-2" : "border"} hover:border-2 
-                  ${
-                    isSelected
-                      ? borderSelectedColor[props.player.element_type]
-                      : "border-slate-700"
-                  } ${borderHoverColor[props.player.element_type]}
+                   hover:border-2 
+                  ${borderHoverColor[props.player.element_type]}
                   hover:shadow-md ${
                     shadowHoverColor[props.player.element_type]
                   } hover:shadow-blue-900 
                   overflow-hidden static
-                  ${isSelected ? "scale-95" : "scale-100"}
                   transition duration-700
                   hover:scale-95 hover:transition hover:duration-700`}
       key={props.player.code}
