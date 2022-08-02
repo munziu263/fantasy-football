@@ -5,6 +5,14 @@ interface PlayerCardProps {
   player: Player;
   position?: Position;
   team?: Team;
+  handlePlayerSelect: (
+    event: MouseEvent<HTMLDivElement>,
+    player: Player
+  ) => void;
+  handlePlayerDeselect: (
+    event: MouseEvent<HTMLDivElement>,
+    player: Player
+  ) => void;
 }
 
 export const PlayerCard = (props: PlayerCardProps) => {
@@ -44,18 +52,21 @@ export const PlayerCard = (props: PlayerCardProps) => {
     4: "hover:shadow-blue-900",
   };
 
-  const handleClick = (event: MouseEvent<HTMLDivElement>) => {
+  const handleClick = (event: MouseEvent<HTMLDivElement>, player: Player) => {
     event.preventDefault();
     setIsSelected(!isSelected);
+    isSelected
+      ? props.handlePlayerDeselect(event, player)
+      : props.handlePlayerSelect(event, player);
     console.log(isSelected);
   };
 
   return (
     <div
       className={`grid grid-cols-12 
-                  rounded-lg container 
+                  rounded-lg container
                   m-2 w-52 max-h-[25.5rem]  
-                  bg-zinc-400 
+                  bg-zinc-400 shrink-0
                   ${isSelected ? "border-2" : "border"} hover:border-2 
                   ${
                     isSelected
@@ -70,6 +81,9 @@ export const PlayerCard = (props: PlayerCardProps) => {
                   transition duration-700
                   hover:scale-95 hover:transition hover:duration-700`}
       key={props.player.code}
+      onClick={(event: MouseEvent<HTMLDivElement>) =>
+        handleClick(event, props.player)
+      }
     >
       {/* Player Image */}
       <div
@@ -77,7 +91,6 @@ export const PlayerCard = (props: PlayerCardProps) => {
                     bg-gradient-to-t ${
                       positionColor[props.player.element_type]
                     }`}
-        onClick={handleClick}
       >
         <p className="absolute top-0 left-0 p-2 text-lg font-bold text-zinc-50">
           {props.team && props.team.short_name}
@@ -108,7 +121,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
           {props.player.web_name}
         </p>
       </div>
-      <div className="text-sm text-zinc-50 font-extrabold col-span-12 bg-slate-900 py-2 text-center">
+      <div className="text-sm text-zinc-50 font-extrabold col-span-12 bg-slate-900 py-2 text-center tracking-widest">
         RANKED
       </div>
       <div className="text-xs text-center col-span-3 py-1 bg-slate-300">

@@ -15,11 +15,17 @@ import {
   filteredPlayersBy,
   cheapestXPlayersForWhom,
 } from "./queries/queries";
+import { PlayerCarousel } from "./components/PlayerCarousel";
 
 function App() {
-  const [teams, setTeams] = useState<Team[]>();
-  const [players, setPlayers] = useState<Player[]>();
-  const [positions, setPositions] = useState<Position[]>();
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [positions, setPositions] = useState<Position[]>([]);
+
+  const [goalkeepers, setGoalkeepers] = useState<Player[]>([]);
+  const [defenders, setDefenders] = useState<Player[]>([]);
+  const [midfielders, setMidfielders] = useState<Player[]>([]);
+  const [forwards, setForwards] = useState<Player[]>([]);
 
   useEffect(() => {
     axios
@@ -37,6 +43,30 @@ function App() {
           )
         );
         setPositions(positions);
+        setGoalkeepers(
+          filteredPlayersBy(
+            response.data.elements,
+            (player: Player) => player.element_type === 1
+          )
+        );
+        setDefenders(
+          filteredPlayersBy(
+            response.data.elements,
+            (player: Player) => player.element_type === 2
+          )
+        );
+        setMidfielders(
+          filteredPlayersBy(
+            response.data.elements,
+            (player: Player) => player.element_type === 3
+          )
+        );
+        setForwards(
+          filteredPlayersBy(
+            response.data.elements,
+            (player: Player) => player.element_type === 4
+          )
+        );
       })
       .catch((err: Error) => {
         console.log(err);
@@ -44,20 +74,22 @@ function App() {
   }, []);
 
   return (
-    <div className="flex flex-wrap items-start bg-slate-900 bg-fixed min-h-screen top-0 left-0">
-      <div className="flex flex-wrap bg-slate-900">
-        {players &&
-          players
-            // .sort((a: Player, b: Player) => a.ict_index_rank - b.ict_index_rank)
-            .map((player: Player) => (
-              <PlayerCard
-                player={player}
-                position={positions && getPlayerPosition(player, positions)}
-                team={teams && getPlayerTeam(player, teams)}
-                key={"player-" + player.code}
+    <div className="items-start bg-slate-900 bg-fixed min-h-screen top-0 left-0">
+      {goalkeepers &&
+        defenders &&
+        midfielders &&
+        forwards &&
+        [goalkeepers, defenders, midfielders, forwards].map(
+          (group: Player[], i: number) => {
+            return (
+              <PlayerCarousel
+                players={group}
+                position={getPosition(i + 1, positions)}
+                teams={teams}
               />
-            ))}
-      </div>
+            );
+          }
+        )}
     </div>
   );
 }
