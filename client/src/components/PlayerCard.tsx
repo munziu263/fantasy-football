@@ -1,3 +1,4 @@
+import { MouseEvent, useState } from "react";
 import { Player, Position, Team } from "../types";
 
 interface PlayerCardProps {
@@ -7,6 +8,8 @@ interface PlayerCardProps {
 }
 
 export const PlayerCard = (props: PlayerCardProps) => {
+  const [isSelected, setIsSelected] = useState<boolean>(false);
+
   const imageUrlBase =
     "https://resources.premierleague.com/premierleague/photos/players/110x140/p";
   const teamShirtImageUrlBase =
@@ -27,11 +30,24 @@ export const PlayerCard = (props: PlayerCardProps) => {
     4: "hover:border-blue-300",
   };
 
+  const borderSelectedColor: { [position: number]: string } = {
+    1: "border-slate-300",
+    2: "border-emerald-300",
+    3: "border-cyan-300",
+    4: "border-blue-300",
+  };
+
   const shadowHoverColor: { [position: number]: string } = {
     1: "hover:shadow-slate-500",
     2: "hover:shadow-emerald-500",
     3: "hover:shadow-cyan-500",
     4: "hover:shadow-blue-900",
+  };
+
+  const handleClick = (event: MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsSelected(!isSelected);
+    console.log(isSelected);
   };
 
   return (
@@ -40,15 +56,19 @@ export const PlayerCard = (props: PlayerCardProps) => {
                   rounded-lg container 
                   m-2 w-52 max-h-[25.5rem]  
                   bg-zinc-400 
-                  border hover:border-2 
-                  border-slate-700 ${
-                    borderHoverColor[props.player.element_type]
-                  }
+                  ${isSelected ? "border-2" : "border"} hover:border-2 
+                  ${
+                    isSelected
+                      ? borderSelectedColor[props.player.element_type]
+                      : "border-slate-700"
+                  } ${borderHoverColor[props.player.element_type]}
                   hover:shadow-md ${
                     shadowHoverColor[props.player.element_type]
                   } hover:shadow-blue-900 
                   overflow-hidden static
-                  hover:scale-95 hover:transition hover:duration-300`}
+                  ${isSelected ? "scale-95" : "scale-100"}
+                  transition duration-700
+                  hover:scale-95 hover:transition hover:duration-700`}
       key={props.player.code}
     >
       {/* Player Image */}
@@ -57,6 +77,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
                     bg-gradient-to-t ${
                       positionColor[props.player.element_type]
                     }`}
+        onClick={handleClick}
       >
         <p className="absolute top-0 left-0 p-2 text-lg font-bold text-zinc-50">
           {props.team && props.team.short_name}

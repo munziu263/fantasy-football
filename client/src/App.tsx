@@ -31,7 +31,7 @@ function App() {
         setTeams(teams);
         setPlayers(
           cheapestXPlayersForWhom(
-            10,
+            20,
             (player: Player) => player.ict_index_rank <= 50,
             players
           )

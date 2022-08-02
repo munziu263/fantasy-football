@@ -66,4 +66,5 @@ export const cheapestXPlayersForWhom = (
 
 export const generateTeam = (players: Player[], budget: number) => {
   const BUDGET = budget * 10; // 1M is demonstrated the API as 10.
+  return players;
 };

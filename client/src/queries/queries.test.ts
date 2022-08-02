@@ -10,6 +10,7 @@ import {
   bestPlayerBy,
   filteredPlayersBy,
   cheapestXPlayersForWhom,
+  generateTeam,
 } from "./queries";
 import * as data from "../sample-data.json";
 
