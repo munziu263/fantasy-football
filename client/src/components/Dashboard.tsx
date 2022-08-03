@@ -40,7 +40,7 @@ export const Dashboard = (props: DashboardProps) => {
           EXP. POINTS NEXT ROUND
         </div>
         <div className="text-5xl font-bold text-zinc-50">
-          {props.expectedPoints}
+          {props.expectedPoints.toFixed(2)}
         </div>
       </div>
     </div>

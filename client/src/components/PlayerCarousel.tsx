@@ -35,7 +35,7 @@ export const PlayerCarousel = (props: PlayerCarouselProps) => {
                   my-2`}
     >
       <div
-        className={`bg-zinc-50/10 border-r rounded-lg xs:basis-16 sm:basis-20 flex`}
+        className={`bg-zinc-50/10 border-r rounded-lg xs:basis-16 sm:basis-1/12 flex`}
       >
         <div className="text-base text-zinc-50 font-extrabold m-auto">
           <p className="text-center">

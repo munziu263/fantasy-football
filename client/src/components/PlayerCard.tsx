@@ -82,7 +82,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
       {/* Player Image */}
       <div className={`relative p-3`}>
         <img
-          className="rounded-full sm:h-1/4 md:h-2/4 m-auto bg-zinc-50/10 shadow-xl"
+          className="rounded-full m-auto bg-zinc-50/10 shadow-xl"
           src={imageUrlBase + props.player.photo.replace(".jpg", ".png")}
           alt={
             props.player.web_name.length >= 3
