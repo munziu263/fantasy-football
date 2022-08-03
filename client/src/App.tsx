@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, MouseEvent } from "react";
 import axios, { AxiosResponse } from "axios";
 import "./App.css";
 import { Team, Player, Position } from "./types";
@@ -16,80 +16,124 @@ import {
   cheapestXPlayersForWhom,
 } from "./queries/queries";
 import { PlayerCarousel } from "./components/PlayerCarousel";
+import { Dashboard } from "./components/Dashboard";
 
 function App() {
   const [teams, setTeams] = useState<Team[]>([]);
-  const [players, setPlayers] = useState<Player[]>([]);
   const [positions, setPositions] = useState<Position[]>([]);
+  const [unselectedPlayers, setUnselectedPlayers] = useState<Player[]>([]);
+  const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
 
-  const [goalkeepers, setGoalkeepers] = useState<Player[]>([]);
-  const [defenders, setDefenders] = useState<Player[]>([]);
-  const [midfielders, setMidfielders] = useState<Player[]>([]);
-  const [forwards, setForwards] = useState<Player[]>([]);
+  const [budget, setBudget] = useState<number>(1000);
+  const [expectedPoints, setExpectedPoints] = useState<number>(0);
+  const [focusedPlayer, setFocusedPlayer] = useState<Player>();
+
+  const POSITION_LIMIT: { [positionId: number]: number } = {
+    1: 2,
+    2: 5,
+    3: 5,
+    4: 3,
+  };
+
+  const handlePlayerSelect = (
+    event: MouseEvent<HTMLDivElement>,
+    player: Player
+  ) => {
+    event.preventDefault();
+    setFocusedPlayer(player);
+    if (
+      selectedPlayers.filter(
+        (currentPlayer: Player) =>
+          currentPlayer.element_type === player.element_type
+      ).length < POSITION_LIMIT[player.element_type] &&
+      !selectedPlayers.includes(player)
+    ) {
+      setSelectedPlayers((prevState: Player[]) => [...prevState, player]);
+      setUnselectedPlayers((prevState: Player[]) =>
+        prevState.filter(
+          (currentPlayer: Player) => currentPlayer.id !== player.id
+        )
+      );
+    } else {
+      console.log(
+        `You have already selected the limit for ${
+          getPlayerPosition(player, positions)
+            ? getPlayerPosition(player, positions)?.plural_name
+            : "that position"
+        }`
+      );
+    }
+  };
+
+  const handlePlayerDeselect = (
+    event: MouseEvent<HTMLDivElement>,
+    player: Player
+  ) => {
+    event.preventDefault();
+    setFocusedPlayer(player);
+    setUnselectedPlayers((prevState: Player[]) => [...prevState, player]);
+    setSelectedPlayers((prevState: Player[]) =>
+      prevState.filter(
+        (currentPlayer: Player) => currentPlayer.id !== player.id
+      )
+    );
+  };
 
   useEffect(() => {
     axios
       .get("/api")
       .then((response: AxiosResponse) => {
-        const teams: Team[] = response.data.teams;
-        const players: Player[] = response.data.elements;
-        const positions: Position[] = response.data.element_types;
-        setTeams(teams);
-        setPlayers(
-          cheapestXPlayersForWhom(
-            20,
-            (player: Player) => player.ict_index_rank <= 50,
-            players
-          )
-        );
-        setPositions(positions);
-        setGoalkeepers(
-          filteredPlayersBy(
-            response.data.elements,
-            (player: Player) => player.element_type === 1
-          )
-        );
-        setDefenders(
-          filteredPlayersBy(
-            response.data.elements,
-            (player: Player) => player.element_type === 2
-          )
-        );
-        setMidfielders(
-          filteredPlayersBy(
-            response.data.elements,
-            (player: Player) => player.element_type === 3
-          )
-        );
-        setForwards(
-          filteredPlayersBy(
-            response.data.elements,
-            (player: Player) => player.element_type === 4
-          )
-        );
+        setTeams(response.data.teams);
+        setUnselectedPlayers(response.data.elements);
+        setPositions(response.data.element_types);
       })
       .catch((err: Error) => {
         console.log(err);
       });
   }, []);
 
+  useEffect(() => {});
+  useEffect(() => {});
+  useEffect(() => {});
+
   return (
-    <div className="items-start bg-slate-900 bg-fixed min-h-screen top-0 left-0">
-      {goalkeepers &&
-        defenders &&
-        midfielders &&
-        forwards &&
-        [goalkeepers, defenders, midfielders, forwards].map(
-          (group: Player[], i: number) => {
+    <div className="h-screen overflow-auto bg-slate-900 p-2 grid grid-cols-12">
+      <div className="col-span-9">
+        {" "}
+        <Dashboard budget={budget} expectedPoints={expectedPoints} />
+        <div>
+          {[1, 2, 3, 4].map((i: number) => {
             return (
-              <PlayerCarousel
-                players={group}
-                position={getPosition(i + 1, positions)}
-                teams={teams}
-              />
+              <div className="h-fit">
+                <PlayerCarousel
+                  unselectedPlayers={unselectedPlayers.filter(
+                    (player: Player) => player.element_type === i
+                  )}
+                  selectedPlayers={selectedPlayers.filter(
+                    (player: Player) => player.element_type === i
+                  )}
+                  position={getPosition(i, positions)}
+                  teams={teams}
+                  handlePlayerSelect={handlePlayerSelect}
+                  handlePlayerDeselect={handlePlayerDeselect}
+                />
+              </div>
             );
-          }
+          })}
+        </div>
+      </div>
+
+      <div className="col-span-3 bg-gradient-to-r from-slate-900 to-cyan-900">
+        PLAYER STATS
+        {focusedPlayer && (
+          <PlayerCard
+            player={focusedPlayer}
+            isSelected={true}
+            handlePlayerDeselect={handlePlayerDeselect}
+            handlePlayerSelect={handlePlayerSelect}
+          />
         )}
+      </div>
     </div>
   );
 }

@@ -18,7 +18,7 @@ interface PlayerCardProps {
 
 export const PlayerCard = (props: PlayerCardProps) => {
   const imageUrlBase =
-    "https://resources.premierleague.com/premierleague/photos/players/110x140/p";
+    "https://resources.premierleague.com/premierleague/photos/players/250x250/p";
   const teamShirtImageUrlBase =
     "https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_";
   const teamShirtImageUrlSuffix = "-66.webp";
@@ -60,10 +60,8 @@ export const PlayerCard = (props: PlayerCardProps) => {
 
   return (
     <div
-      className={`grid grid-cols-12 
-                  rounded-lg container
-                  m-2 w-52 max-h-[25.5rem]  
-                  bg-zinc-400 shrink-0
+      className={`rounded-lg
+                  bg-zinc-400
                    hover:border-2 
                   ${borderHoverColor[props.player.element_type]}
                   hover:shadow-md ${
@@ -71,67 +69,65 @@ export const PlayerCard = (props: PlayerCardProps) => {
                   } hover:shadow-blue-900 
                   overflow-hidden static
                   transition duration-700
-                  hover:scale-95 hover:transition hover:duration-700`}
+                  hover:scale-95 hover:transition hover:duration-700
+                  m-1
+                  basis-1/5 shrink-0  h-fit
+                  bg-gradient-to-t ${positionColor[props.player.element_type]}
+                  `}
       key={props.player.code}
       onClick={(event: MouseEvent<HTMLDivElement>) =>
         handleClick(event, props.player)
       }
     >
       {/* Player Image */}
-      <div
-        className={`relative col-span-12 
-                    bg-gradient-to-t ${
-                      positionColor[props.player.element_type]
-                    }`}
-      >
-        <p className="absolute top-0 left-0 p-2 text-lg font-bold text-zinc-50">
+      <div className={`relative p-3`}>
+        <img
+          className="rounded-full sm:h-1/4 md:h-2/4 m-auto bg-zinc-50/10 shadow-xl"
+          src={imageUrlBase + props.player.photo.replace(".jpg", ".png")}
+          alt={
+            props.player.web_name.length >= 3
+              ? props.player.web_name.substring(0, 3) + "..."
+              : props.player.web_name
+          }
+          loading="lazy"
+          // onError={(event: any) => {
+          //   event.target.src = props.team
+          //     ? teamShirtImageUrlBase +
+          //       props.team.code +
+          //       teamShirtImageUrlSuffix
+          //     : "";
+          //   event.onError = null;
+          // }}
+        />
+        <p className="text-zinc-50 sm:text-xs font-bold absolute top-0 left-0 p-2">
           {props.team && props.team.short_name}
         </p>
-        <p className="absolute top-0 right-0 p-2 text-xl text-zinc-50 font-bold">
+        <p className=" text-zinc-50 sm:text-xs font-bold absolute top-0 right-0 p-2">
           {`£${(props.player.now_cost / 10).toFixed(1)}`}
         </p>
-        <img
-          className="w-full"
-          src={imageUrlBase + props.player.photo.replace(".jpg", ".png")}
-          alt={props.player.web_name}
-          onError={(event: any) => {
-            event.target.src = props.team
-              ? teamShirtImageUrlBase +
-                props.team.code +
-                teamShirtImageUrlSuffix
-              : "";
-            event.onError = null;
-          }}
-        />
+        <div className="sm:text-xs absolute bottom-0 left-0 text-center m-auto text-zinc-50 p-2">
+          <p className="font-bold">{props.player.ict_index_rank}</p>
+          <p className=" sm:hidden text-center text-zinc-50">RANK</p>
+        </div>
+        <div className="sm:text-xs absolute bottom-0 right-0 text-center m-auto text-zinc-50 p-2">
+          <p className="font-bold">{props.player.ep_next}</p>
+          <p className="sm:hidden text-center text-zinc-50">EP</p>
+        </div>
       </div>
+
       {/* Player Details */}
-      <div className="col-span-12 p-1 text-center my-auto">
-        <p className={"text-sm text-zinc-700"}>
-          {props.position && props.position.singular_name}
+      <div className="text-center sm:text-xs">
+        <p className={"text-zinc-300"}>
+          {props.position && props.position.singular_name_short.toUpperCase()}
         </p>
-        <p className="text-xl text-zinc-900 font-bold">
-          {props.player.web_name}
+        <p className="text-zinc-50 sm:text-sm font-bold">
+          {props.player.web_name.length >= 9
+            ? props.player.web_name.substring(0, 9) + "..."
+            : props.player.web_name}
         </p>
       </div>
-      <div className="text-sm text-zinc-50 font-extrabold col-span-12 bg-slate-900 py-2 text-center tracking-widest">
-        RANKED
-      </div>
-      <div className="text-xs text-center col-span-3 py-1 bg-slate-300">
-        <p>INF</p>
-        <p className="text-lg font-bold">{props.player.influence_rank}</p>
-      </div>
-      <div className="text-xs text-center col-span-3 py-1 bg-slate-400">
-        <p>CRE</p>
-        <p className="text-lg font-bold">{props.player.creativity_rank}</p>
-      </div>
-      <div className="text-xs text-center col-span-3 py-1 bg-slate-500">
-        <p>THR</p>
-        <p className="text-lg font-bold">{props.player.threat_rank}</p>
-      </div>
-      <div className="text-xs text-center text-zinc-50 col-span-3 p-1 bg-slate-900">
-        <p>ICT</p>
-        <p className="text-lg font-bold">{props.player.ict_index_rank}</p>
-      </div>
+
+      {/* Player stats */}
     </div>
   );
 };
