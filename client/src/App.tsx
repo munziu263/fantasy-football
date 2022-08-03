@@ -92,14 +92,26 @@ function App() {
       });
   }, []);
 
-  useEffect(() => {});
-  useEffect(() => {});
+  useEffect(() => {
+    const initialBudget = 1000;
+    const spentBudget: number = selectedPlayers.reduce(
+      (total: number, player: Player) => (total += player.now_cost),
+      0
+    );
+    setBudget(initialBudget - spentBudget);
+  });
+  useEffect(() => {
+    const totalPoints: number = selectedPlayers.reduce(
+      (total: number, player: Player) => (total += Number(player.ep_next)),
+      0
+    );
+    setExpectedPoints(totalPoints);
+  });
   useEffect(() => {});
 
   return (
     <div className="h-screen overflow-auto bg-slate-900 p-2 grid grid-cols-12">
       <div className="col-span-9">
-        {" "}
         <Dashboard budget={budget} expectedPoints={expectedPoints} />
         <div>
           {[1, 2, 3, 4].map((i: number) => {
@@ -124,7 +136,10 @@ function App() {
       </div>
 
       <div className="col-span-3 bg-gradient-to-r from-slate-900 to-cyan-900">
-        PLAYER STATS
+        <p className="text-2xl text-center text-zinc-50 font-light tracking-widest">
+          PLAYER STATS
+        </p>
+
         {focusedPlayer && (
           <PlayerCard
             player={focusedPlayer}

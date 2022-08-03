@@ -6,7 +6,7 @@ interface DashboardProps {
 export const Dashboard = (props: DashboardProps) => {
   return (
     <div className="grid grid-cols-12 justify-between h-fit pb-2">
-      <div className="col-span-2 bg-slate-300">
+      <div className="col-span-2 bg-gradient-to-tr rounded-full from-purple-500 via-blue-500 to-teal-500">
         <div className="grid grid-cols-3 grayscale">
           <img
             className="col-span-1 m-auto"
@@ -23,7 +23,15 @@ export const Dashboard = (props: DashboardProps) => {
         <div className="text-2xl text-zinc-50 font-light tracking-widest">
           BUDGET
         </div>
-        <div className=" text-emerald-400 font-bold text-5xl">
+        <div
+          className={`text-transparent bg-clip-text bg-gradient-to-r
+          ${
+            props.budget >= 0
+              ? "from-emerald-600 to-cyan-600"
+              : " from-red-600 to-amber-600 font-bold text-5xl"
+          }
+          font-bold text-5xl`}
+        >
           {"£" + props.budget / 10 + "M"}
         </div>
       </div>
