@@ -170,10 +170,15 @@ test("cheapestXPlayersForWhom should return the (best) cheapest player who match
 test("generateTeam should return a list of players that match the fantasy rules", () => {
   // GIVEN  a list of players and an optional budget
   const players: Player[] = data.elements;
+  const selectedPlayers: Player[] = data.elements.slice(0, 3);
   const budget: number = 100; // the budget per the rules is 100M
 
   // WHEN   I call generateTeam
-  const generatedTeam: Player[] = generateTeam(players, budget);
+  const generatedTeam: Player[] = generateTeam(
+    selectedPlayers,
+    players,
+    budget
+  );
 
   // THEN   I should have a list of players
   expect(generatedTeam.length).toBeGreaterThan(0);

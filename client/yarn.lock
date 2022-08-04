@@ -1070,6 +1070,11 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@bygdle/javascript-lp-solver@^0.4.25":
+  version "0.4.25"
+  resolved "https://registry.yarnpkg.com/@bygdle/javascript-lp-solver/-/javascript-lp-solver-0.4.25.tgz#1aec39f8b86add13feb65a9c2f606f78fc647ca4"
+  integrity sha512-nCiVkabpS6HvKZY00ics9IugiC9pHYppZDqKVFoU4kXazwHBS9ra0RSiH+UbXNwI950bECiE+EXWi3g1Rnu33Q==
+
 "@csstools/normalize.css@*":
   version "12.0.0"
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-12.0.0.tgz#a9583a75c3f150667771f30b60d9f059473e62c4"
